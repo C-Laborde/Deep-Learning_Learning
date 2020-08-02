@@ -12,8 +12,12 @@
 #     name: python3
 # ---
 
+# +
 from IPython.core.interactiveshell import InteractiveShell
 InteractiveShell.ast_node_interactivity = "all"
+
+import matplotlib.pyplot as plt
+# -
 
 from keras.datasets import mnist
 from keras import layers
@@ -24,7 +28,8 @@ from keras.utils import to_categorical
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
-"Train images shape:"
+"Train images dims and shape:"
+train_images.ndim
 train_images.shape
 "Train labels shape:"
 train_labels.shape
@@ -35,7 +40,13 @@ test_labels.shape
 
 train_images.min()
 train_images.max()
-train_images[0]
+train_images.ndim
+
+# +
+digit = train_images[4]
+
+plt.imshow(digit, cmap=plt.cm.binary)
+# -
 
 # ### Network
 
