@@ -139,32 +139,258 @@ history = model.fit(partial_x_train,
 history_dict = history.history
 history_dict.keys()
 
+
 # ### Training plots
 
-# +
+def training_plots(loss_values, val_loss_values, acc, acc_val):
+    epochs = range(1, len(acc) + 1)
+    
+    plt.rcParams["figure.figsize"] = (12, 9)
+    fig, ax = plt.subplots(2, 1)
+    ax[0].plot(epochs, loss_values, "bo", label="Training loss")
+    ax[0].plot(epochs, val_loss_values, "b", label="Validation loss")
+    ax[0].set_title("Training and validation loss")
+    ax[0].set_xlabel("Epochs")
+    ax[0].set_ylabel("Loss")
+    ax[0].legend()
+    
+    ax[1].plot(epochs, acc, "bo", label="Traing accuracy")
+    ax[1].plot(epochs, acc_val, "b", label="Validation accuracy")
+    ax[1].set_title("Training and validation accuracy")
+    ax[1].set_xlabel("Epochs")
+    ax[1].set_ylabel("Accuracy")
+    ax[1].legend()
+    plt.tight_layout
+
+
 loss_values = history_dict["loss"]
 val_loss_values = history_dict["val_loss"]
 acc = history_dict["accuracy"]
 acc_val = history_dict["val_accuracy"]
 epochs = range(1, len(acc) + 1)
 
-InteractiveShell.ast_node_interactivity = "last"
-plt.plot(epochs, loss_values, "bo", label="Training loss")
-plt.plot(epochs, val_loss_values, "b", label="Validation loss")
-plt.title("Training and validation loss")
-plt.xlabel("Epochs")
-plt.ylabel("Loss")
-plt.legend()
-# -
-
-plt.plot(epochs, acc, "bo", label="Traing accuracy")
-plt.plot(epochs, acc_val, "b", label="Validation accuracy")
-plt.title("Training and validation accuracy")
-plt.xlabel("Epochs")
-plt.ylabel("Accuracy")
-plt.legend()
+training_plots(loss_values, val_loss_values, acc, acc_val)
 
 # The validation loss and accuracy peak at around the 4th epoch. We are overfitting! </br>
 # Let's try using less epochs
+
+# **QUESTION: Why now he uses the full train dataset instead of the partial one?**
+
+# model.fit(x_train,
+#           y_train,
+#           epochs=4,
+#           batch_size=512)
+model.fit(partial_x_train,
+          partial_y_train,
+          epochs=4,
+          batch_size=512,
+          validation_data=(x_val, y_val))
+results = model.evaluate(x_test, y_test)
+results
+
+# Predictions
+model.predict(x_test)
+
+# ## Experimentation
+
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
+tests_results = {}
+
+# +
+# 1) 1 Hidden layer
+model = models.Sequential()
+model.add(layers.Dense(16, activation="relu", input_shape=(10000,)))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+# +
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "1 hidden layer"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+# -
+
+training_plots(metrics_results["loss"],
+               metrics_results["val_loss"],
+               metrics_results["acc"],
+               metrics_results["val_acc"])
+
+# +
+# 1) 3 Hidden layer
+model = models.Sequential()
+model.add(layers.Dense(16, activation="relu", input_shape=(10000,)))
+model.add(layers.Dense(16, activation="relu"))
+model.add(layers.Dense(16, activation="relu"))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+# +
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "3 hidden layer"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+
+# +
+# 3) More hidden units
+model = models.Sequential()
+model.add(layers.Dense(32, activation="relu", input_shape=(10000,)))
+model.add(layers.Dense(32, activation="relu"))
+model.add(layers.Dense(32, activation="relu"))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+# +
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "32 hidden units"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+
+# +
+# 4) mse loss function
+model = models.Sequential()
+model.add(layers.Dense(16, activation="relu", input_shape=(10000,)))
+model.add(layers.Dense(16, activation="relu"))
+model.add(layers.Dense(16, activation="relu"))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="mse",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+# +
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "mse loss"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+
+# +
+# 5) tanh activation function
+model = models.Sequential()
+model.add(layers.Dense(16, activation="tanh", input_shape=(10000,)))
+model.add(layers.Dense(16, activation="tanh"))
+model.add(layers.Dense(16, activation="tanh"))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="mse",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+# +
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "tanh activation"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+
+
+# -
+
+def tests_training_plots(tests_results):
+    training_losses = [tests_results[test]["loss"] for test in tests_results]
+    validation_losses = [tests_results[test]["val_loss"] for test in tests_results]
+    training_acc = [tests_results[test]["acc"] for test in tests_results]
+    validation_acc = [tests_results[test]["val_acc"] for test in tests_results]
+    tests = [test for test in tests_results]
+    
+    plt.rcParams["figure.figsize"] = (12, 9)
+    fig, ax = plt.subplots(2, 1)
+    colors = ["b", "r", "g", "c", "m", "k"]
+    colors = colors[:len(tests)]
+    for i in range(len(tests)):        
+        epochs = range(1, len(training_losses[i]) + 1)
+
+        ax[0].plot(epochs, training_losses[i], colors[i] + "o", label="Training loss - " + tests[i])
+        ax[0].plot(epochs, validation_losses[i], colors[i], label="Validation loss - " + tests[i])
+        ax[0].set_title("Training and validation loss")
+        ax[0].set_xlabel("Epochs")
+        ax[0].set_ylabel("Loss")
+        ax[0].legend()
+
+        ax[1].plot(epochs, training_acc[i], colors[i] + "o", label="Traing accuracy - " + tests[i])
+        ax[1].plot(epochs, validation_acc[i], colors[i], label="Validation accuracy - " + tests[i])
+        ax[1].set_title("Training and validation accuracy")
+        ax[1].set_xlabel("Epochs")
+        ax[1].set_ylabel("Accuracy")
+        ax[1].legend()
+        plt.tight_layout
+
+
+tests_training_plots(tests_results)
 
 
