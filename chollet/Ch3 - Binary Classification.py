@@ -17,6 +17,7 @@
 from IPython.core.interactiveshell import InteractiveShell
 InteractiveShell.ast_node_interactivity = "all"
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from keras import models
@@ -119,5 +120,51 @@ model.compile(optimizer="rmsprop",
 # model.compile(optimizer=optimizers.RMSprop(lr=0.001), </br>
 #               &emsp;  loss=losses.binary_crossentropy, </br>
 #               &emsp;  metrics=[metrics.binary_accuracy])
+
+# +
+# Validation
+x_val = x_train[:10000]
+partial_x_train = x_train[10000:]
+
+y_val = y_train[:10000]
+partial_y_train = y_train[10000:]
+# -
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+history_dict = history.history
+history_dict.keys()
+
+# ### Training plots
+
+# +
+loss_values = history_dict["loss"]
+val_loss_values = history_dict["val_loss"]
+acc = history_dict["accuracy"]
+acc_val = history_dict["val_accuracy"]
+epochs = range(1, len(acc) + 1)
+
+InteractiveShell.ast_node_interactivity = "last"
+plt.plot(epochs, loss_values, "bo", label="Training loss")
+plt.plot(epochs, val_loss_values, "b", label="Validation loss")
+plt.title("Training and validation loss")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.legend()
+# -
+
+plt.plot(epochs, acc, "bo", label="Traing accuracy")
+plt.plot(epochs, acc_val, "b", label="Validation accuracy")
+plt.title("Training and validation accuracy")
+plt.xlabel("Epochs")
+plt.ylabel("Accuracy")
+plt.legend()
+
+# The validation loss and accuracy peak at around the 4th epoch. We are overfitting! </br>
+# Let's try using less epochs
 
 
