@@ -109,4 +109,15 @@ model.compile(optimizer="rmsprop",
               loss="binary_crossentropy",
               metrics=["accuracy"])
 
+# **Alternative 1) You want to configure parameters of the optimizer**
+# model.compile(optimizer=optimizers.RMSprop(lr=0.001), </br>
+#               &emsp; loss="binary_crossentropy", </br>
+#               &emsp; metrics=["accuracy"])
+# </br>
+#
+# **Alternative 2) You want to pass a custom loss function or metric function**
+# model.compile(optimizer=optimizers.RMSprop(lr=0.001), </br>
+#               &emsp;  loss=losses.binary_crossentropy, </br>
+#               &emsp;  metrics=[metrics.binary_accuracy])
+
 
