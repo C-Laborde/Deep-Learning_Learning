@@ -19,6 +19,7 @@ InteractiveShell.ast_node_interactivity = "all"
 
 import matplotlib.pyplot as plt
 import numpy as np
+from utils import utils
 
 from keras import models
 from keras import layers
@@ -32,11 +33,9 @@ from keras.datasets import imdb
 train_data.shape
 test_data.shape
 
-# + jupyter={"outputs_hidden": true}
 # Each sample is a list of words forming a review, encoded as a sequence of integers
 review_nr = 1
 train_data[1]
-# -
 
 # Decoding back to English
 word_index = imdb.get_word_index()
@@ -137,37 +136,15 @@ history = model.fit(partial_x_train,
 history_dict = history.history
 history_dict.keys()
 
-
 # ### Training plots
-
-def training_plots(loss_values, val_loss_values, acc, acc_val):
-    epochs = range(1, len(acc) + 1)
-    
-    plt.rcParams["figure.figsize"] = (12, 9)
-    fig, ax = plt.subplots(2, 1)
-    ax[0].plot(epochs, loss_values, "bo", label="Training loss")
-    ax[0].plot(epochs, val_loss_values, "b", label="Validation loss")
-    ax[0].set_title("Training and validation loss")
-    ax[0].set_xlabel("Epochs")
-    ax[0].set_ylabel("Loss")
-    ax[0].legend()
-    
-    ax[1].plot(epochs, acc, "bo", label="Traing accuracy")
-    ax[1].plot(epochs, acc_val, "b", label="Validation accuracy")
-    ax[1].set_title("Training and validation accuracy")
-    ax[1].set_xlabel("Epochs")
-    ax[1].set_ylabel("Accuracy")
-    ax[1].legend()
-    plt.tight_layout
-
 
 loss_values = history_dict["loss"]
 val_loss_values = history_dict["val_loss"]
 acc = history_dict["accuracy"]
 acc_val = history_dict["val_accuracy"]
-epochs = range(1, len(acc) + 1)
+# epochs = range(1, len(acc) + 1)
 
-training_plots(loss_values, val_loss_values, acc, acc_val)
+utils.training_plots(loss_values, val_loss_values, acc, acc_val)
 
 # The validation loss and accuracy peak at around the 4th epoch. We are overfitting! </br>
 # Let's try using less epochs
