@@ -102,9 +102,7 @@ model.add(layers.Dense(16, activation="relu", input_shape=(10000,)))
 model.add(layers.Dense(16, activation="relu"))
 model.add(layers.Dense(1, activation="sigmoid"))
 
-#
-
-# Activation function: This is a binary classification problem and the output of the network is a probability (that's why we end the network with a single-unit layer with a sigmoid activation), it's best to use the _binary_crossentropy_ loss"
+# Activation function: This is a binary classification problem and the output of the network is a probability (that's why we end the network with a single-unit layer with a sigmoid activation), it's best to use the _binary_crossentropy_ loss
 
 model.compile(optimizer="rmsprop",
               loss="binary_crossentropy",
@@ -176,10 +174,6 @@ training_plots(loss_values, val_loss_values, acc, acc_val)
 
 # **QUESTION: Why now he uses the full train dataset instead of the partial one?**
 
-# model.fit(x_train,
-#           y_train,
-#           epochs=4,
-#           batch_size=512)
 model.fit(partial_x_train,
           partial_y_train,
           epochs=4,
@@ -329,17 +323,17 @@ else:
 
 # +
 # 5) tanh activation function
-model = models.Sequential()
-model.add(layers.Dense(16, activation="tanh", input_shape=(10000,)))
-model.add(layers.Dense(16, activation="tanh"))
-model.add(layers.Dense(16, activation="tanh"))
-model.add(layers.Dense(1, activation="sigmoid"))
+model5 = models.Sequential()
+model5.add(layers.Dense(16, activation="tanh", input_shape=(10000,)))
+model5.add(layers.Dense(16, activation="tanh"))
+model5.add(layers.Dense(16, activation="tanh"))
+model5.add(layers.Dense(1, activation="sigmoid"))
 
-model.compile(optimizer="rmsprop",
+model5.compile(optimizer="rmsprop",
               loss="mse",
               metrics=["accuracy"])
 
-history = model.fit(partial_x_train,
+history = model5.fit(partial_x_train,
                     partial_y_train,
                     epochs=20,
                     batch_size=512,
@@ -372,7 +366,7 @@ def tests_training_plots(tests_results):
     fig, ax = plt.subplots(2, 1)
     colors = ["b", "r", "g", "c", "m", "k"]
     colors = colors[:len(tests)]
-    for i in range(len(tests)):        
+    for i in range(0, len(tests)):        
         epochs = range(1, len(training_losses[i]) + 1)
 
         ax[0].plot(epochs, training_losses[i], colors[i] + "o", label="Training loss - " + tests[i])
@@ -380,17 +374,19 @@ def tests_training_plots(tests_results):
         ax[0].set_title("Training and validation loss")
         ax[0].set_xlabel("Epochs")
         ax[0].set_ylabel("Loss")
-        ax[0].legend()
+        ax[0].legend(loc="upper right")
 
         ax[1].plot(epochs, training_acc[i], colors[i] + "o", label="Traing accuracy - " + tests[i])
         ax[1].plot(epochs, validation_acc[i], colors[i], label="Validation accuracy - " + tests[i])
         ax[1].set_title("Training and validation accuracy")
         ax[1].set_xlabel("Epochs")
         ax[1].set_ylabel("Accuracy")
-        ax[1].legend()
+        ax[1].legend(loc="upper right")
         plt.tight_layout
 
 
 tests_training_plots(tests_results)
+
+# **QUESTION: Why all results are the same??**
 
 
