@@ -193,7 +193,7 @@ metrics_results = {"loss": [],
                    "val_acc": []}
 tests_results = {}
 
-# +
+# + jupyter={"outputs_hidden": true}
 # 1) 1 Hidden layer
 model = models.Sequential()
 model.add(layers.Dense(16, activation="relu", input_shape=(10000,)))
@@ -388,5 +388,9 @@ def tests_training_plots(tests_results):
 tests_training_plots(tests_results)
 
 # **QUESTION: Why all results are the same??**
+
+tests_results["1 hidden layer"]["loss"]
+
+tests_results["3 hidden layer"]["loss"]
 
 
