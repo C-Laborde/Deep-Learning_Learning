@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -49,6 +50,8 @@ test_data /= std
 # -
 
 # ### Network architecture
+
+# If we don’t have much training data, we should use a small network with only one or two hidden layers, to avoid severe overfitting.
 
 # +
 from keras import models
@@ -106,6 +109,9 @@ np.mean(all_scores)
 
 # We will try with longer epochs
 
+# **QUESTION: AM I USING THE RIGHT METRIC BELOW? IT SEEMS THAT THE VALIDATION LOSS IS 
+# CONSTANTLY DECREASING**
+
 # +
 num_epochs = 500
 all_mae_histories = []
@@ -147,7 +153,7 @@ def smooth_curve(points, factor=0.9):
     for point in points:
         if smoothed_points:
             previous = smoothed_points[-1]
-            smooted_points.append(previous * factor + point * (1 - factor))
+            smoothed_points.append(previous * factor + point * (1 - factor))
         else:
             smoothed_points.append(point)
     return smoothed_points
@@ -157,7 +163,7 @@ def smooth_curve(points, factor=0.9):
 
 smoothed_mae_history = smooth_curve(average_mae_history[10:])
 
-plt.plot(range(1, len(smooth_mae_history) + 1), smooth_mae_history)
+plt.plot(range(1, len(smoothed_mae_history) + 1), smoothed_mae_history)
 plt.xlabel("Epochs")
 plt.ylabel("Validation MAE")
 
