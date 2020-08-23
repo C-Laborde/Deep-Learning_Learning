@@ -160,3 +160,20 @@ smoothed_mae_history = smooth_curve(average_mae_history[10:])
 plt.plot(range(1, len(smooth_mae_history) + 1), smooth_mae_history)
 plt.xlabel("Epochs")
 plt.ylabel("Validation MAE")
+
+# It seems that the model starts overfitting after 80 epochs
+
+# ### Final model
+
+# +
+# OBS: Before training the final model we should optimize other parameters such us epochs,
+# or number of hidden layers
+
+model = build_model()
+model.fit(train_data, train_targets,
+          epochs=80, batch_size=16, verbose=0)
+
+test_mse_score, test_mae_score = model.evaluate(test_data, test_targets)
+# -
+
+test_mae_score
