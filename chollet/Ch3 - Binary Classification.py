@@ -33,9 +33,11 @@ from keras.datasets import imdb
 train_data.shape
 test_data.shape
 
+# + jupyter={"outputs_hidden": true}
 # Each sample is a list of words forming a review, encoded as a sequence of integers
 review_nr = 1
 train_data[1]
+# -
 
 # Decoding back to English
 word_index = imdb.get_word_index()
@@ -369,5 +371,108 @@ tests_training_plots(tests_results)
 tests_results["1 hidden layer"]["loss"]
 
 tests_results["3 hidden layer"]["loss"]
+
+# ### Optimizing capacity to reduce overfitting and underfitting
+
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
+tests_results = {}
+
+# **Original model**
+
+# +
+model = models.Sequential()
+model.add(layers.Dense(16, activation="relu", input_shape=(10000,)))
+model.add(layers.Dense(16, activation="relu"))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "original model"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+# -
+
+# **Lower capacity**
+
+# +
+model = models.Sequential()
+model.add(layers.Dense(4, activation="relu", input_shape=(10000,)))
+model.add(layers.Dense(4, activation="relu"))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "lower capacity model"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+# -
+
+# **Higher capacity**
+
+# +
+model = models.Sequential()
+model.add(layers.Dense(512, activation="relu", input_shape=(10000,)))
+model.add(layers.Dense(512, activation="relu"))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "Higher capacity model"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+# -
+
+tests_training_plots(tests_results)
 
 
