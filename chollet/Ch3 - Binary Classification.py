@@ -511,4 +511,39 @@ else:
 
 tests_training_plots(tests_results)
 
+# ### Dropout
+
+# +
+model = models.Sequential()
+model.add(layers.Dense(16, activation="relu", input_shape=(10000,)))
+model.add(layers.Dropout(0.5))
+model.add(layers.Dense(16, activation="relu"))
+model.add(layers.Dropout(0.5))
+model.add(layers.Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+
+history = model.fit(partial_x_train,
+                    partial_y_train,
+                    epochs=20,
+                    batch_size=512,
+                    validation_data=(x_val, y_val))
+
+history_dict = history.history
+metrics_results["loss"] = history_dict["loss"]
+metrics_results["val_loss"] = history_dict["val_loss"]
+metrics_results["acc"] = history_dict["accuracy"]
+metrics_results["val_acc"] = history_dict["val_accuracy"]
+
+test = "Dropout model"
+if test in tests_results:
+    raise KeyError("Test name already exists")
+else:
+    tests_results[test] = metrics_results
+# -
+
+tests_training_plots(tests_results)
+
 
