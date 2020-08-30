@@ -19,7 +19,7 @@ InteractiveShell.ast_node_interactivity = "all"
 
 import matplotlib.pyplot as plt
 import numpy as np
-from utils import utils
+from utils.utils import training_plots, tests_training_plots
 
 from keras import layers
 from keras import models
@@ -136,18 +136,16 @@ history = model.fit(partial_x_train,
                     batch_size=512,
                     validation_data=(x_val, y_val))
 
-history_dict = history.history
-history_dict.keys()
-
 # ### Training plots
 
+history_dict = history.history
 loss_values = history_dict["loss"]
 val_loss_values = history_dict["val_loss"]
 acc = history_dict["accuracy"]
 acc_val = history_dict["val_accuracy"]
 # epochs = range(1, len(acc) + 1)
 
-utils.training_plots(loss_values, val_loss_values, acc, acc_val)
+training_plots(loss_values, val_loss_values, acc, acc_val)
 
 # The validation loss and accuracy peak at around the 4th epoch. We are overfitting! </br>
 # Let's try using less epochs
@@ -173,7 +171,7 @@ metrics_results = {"loss": [],
                    "val_acc": []}
 tests_results = {}
 
-# + jupyter={"outputs_hidden": true}
+# +
 # 1) 1 Hidden layer
 model = models.Sequential()
 model.add(layers.Dense(16, activation="relu", input_shape=(10000,)))
@@ -227,6 +225,11 @@ history = model.fit(partial_x_train,
                     validation_data=(x_val, y_val))
 
 # +
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
+
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
@@ -258,6 +261,11 @@ history = model.fit(partial_x_train,
                     validation_data=(x_val, y_val))
 
 # +
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
+
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
@@ -289,6 +297,11 @@ history = model.fit(partial_x_train,
                     validation_data=(x_val, y_val))
 
 # +
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
+
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
@@ -320,6 +333,11 @@ history = model5.fit(partial_x_train,
                     validation_data=(x_val, y_val))
 
 # +
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
+
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
@@ -367,18 +385,8 @@ def tests_training_plots(tests_results):
 
 tests_training_plots(tests_results)
 
-# **QUESTION: Why all results are the same??**
-
-tests_results["1 hidden layer"]["loss"]
-
-tests_results["3 hidden layer"]["loss"]
-
 # ### Optimizing capacity to reduce overfitting and underfitting
 
-metrics_results = {"loss": [],
-                   "val_loss": [],
-                   "acc": [],
-                   "val_acc": []}
 tests_results = {}
 
 # **Original model**
@@ -399,13 +407,17 @@ history = model.fit(partial_x_train,
                     batch_size=512,
                     validation_data=(x_val, y_val))
 
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
 metrics_results["acc"] = history_dict["accuracy"]
 metrics_results["val_acc"] = history_dict["val_accuracy"]
 
-test = "original model"
+test = "Original Model"
 if test in tests_results:
     raise KeyError("Test name already exists")
 else:
@@ -430,13 +442,17 @@ history = model.fit(partial_x_train,
                     batch_size=512,
                     validation_data=(x_val, y_val))
 
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
 metrics_results["acc"] = history_dict["accuracy"]
 metrics_results["val_acc"] = history_dict["val_accuracy"]
 
-test = "lower capacity model"
+test = "Lower Capacity Model"
 if test in tests_results:
     raise KeyError("Test name already exists")
 else:
@@ -461,13 +477,17 @@ history = model.fit(partial_x_train,
                     batch_size=512,
                     validation_data=(x_val, y_val))
 
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
 metrics_results["acc"] = history_dict["accuracy"]
 metrics_results["val_acc"] = history_dict["val_accuracy"]
 
-test = "Higher capacity model"
+test = "Higher Capacity Model"
 if test in tests_results:
     raise KeyError("Test name already exists")
 else:
@@ -496,13 +516,17 @@ history = model.fit(partial_x_train,
                     batch_size=512,
                     validation_data=(x_val, y_val))
 
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
 metrics_results["acc"] = history_dict["accuracy"]
 metrics_results["val_acc"] = history_dict["val_accuracy"]
 
-test = "L2 reg model"
+test = "L2 Reg Model"
 if test in tests_results:
     raise KeyError("Test name already exists")
 else:
@@ -531,13 +555,17 @@ history = model.fit(partial_x_train,
                     batch_size=512,
                     validation_data=(x_val, y_val))
 
+metrics_results = {"loss": [],
+                   "val_loss": [],
+                   "acc": [],
+                   "val_acc": []}
 history_dict = history.history
 metrics_results["loss"] = history_dict["loss"]
 metrics_results["val_loss"] = history_dict["val_loss"]
 metrics_results["acc"] = history_dict["accuracy"]
 metrics_results["val_acc"] = history_dict["val_accuracy"]
 
-test = "Dropout model"
+test = "Dropout Model"
 if test in tests_results:
     raise KeyError("Test name already exists")
 else:
